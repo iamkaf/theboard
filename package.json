@@ -1,0 +1,41 @@
+{
+  "name": "theboard",
+  "version": "0.1.0",
+  "description": "CLI for interacting with The Board API",
+  "type": "module",
+  "bin": {
+    "theboard": "./dist/src/cli.js"
+  },
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
+  "files": [
+    "dist/src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "pretest": "npm run build",
+    "test": "node --test dist/test/**/*.test.js",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "theboard",
+    "board",
+    "cli",
+    "kanban",
+    "api"
+  ],
+  "author": "Kaf",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "typescript": "^5.9.3"
+  }
+}
