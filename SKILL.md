@@ -1,9 +1,9 @@
 ---
-name: theboard-cli
-description: Use when you need to work with The Board from a terminal through the theboard CLI, including login, listing boards, fetching cards, creating cards, moving cards, and posting comments.
+name: boardsh-cli
+description: Use when you need to work with The Board from a terminal through the boardsh CLI, including login, listing boards, fetching cards, creating cards, moving cards, and posting comments.
 ---
 
-# theboard CLI
+# boardsh CLI
 
 Use this skill when the task is about interacting with The Board from a shell or script.
 
@@ -14,14 +14,14 @@ Prefer the CLI over raw `curl` when it covers the task. Use `--json` for scripte
 Preferred flow:
 
 ```bash
-theboard login
+boardsh login
 ```
 
 Manual fallback:
 
 ```bash
-export THEBOARD_TOKEN="brd_pat_..."
-export THEBOARD_BASE_URL="https://board.kaf.sh/api"
+export BOARDSH_TOKEN="brd_pat_..."
+export BOARDSH_BASE_URL="https://board.kaf.sh/api"
 ```
 
 ## Common Commands
@@ -29,26 +29,26 @@ export THEBOARD_BASE_URL="https://board.kaf.sh/api"
 List boards:
 
 ```bash
-theboard boards list
-theboard --json boards list
+boardsh boards list
+boardsh --json boards list
 ```
 
 Get a board:
 
 ```bash
-theboard boards get <boardId>
+boardsh boards get <boardId>
 ```
 
 Get a card:
 
 ```bash
-theboard cards get <boardId> BRD-29
+boardsh cards get <boardId> BRD-29
 ```
 
 Create a card:
 
 ```bash
-theboard cards create <boardId> \
+boardsh cards create <boardId> \
   --list <listId> \
   --title "Ship CLI" \
   --description "Created from the terminal"
@@ -57,7 +57,7 @@ theboard cards create <boardId> \
 Move a card:
 
 ```bash
-theboard cards move <boardId> BRD-29 \
+boardsh cards move <boardId> BRD-29 \
   --list <listId> \
   --index 0
 ```
@@ -65,7 +65,7 @@ theboard cards move <boardId> BRD-29 \
 Comment on a card:
 
 ```bash
-theboard cards comment <boardId> BRD-29 \
+boardsh cards comment <boardId> BRD-29 \
   --message "Done via CLI"
 ```
 

@@ -37,7 +37,7 @@ export async function runCli(
 		const { globals, rest } = parseGlobalArgs(argv);
 
 		if (globals.version) {
-			io.stdout.write(`theboard ${CLI_VERSION}\n`);
+			io.stdout.write(`boardsh ${CLI_VERSION}\n`);
 			return 0;
 		}
 
@@ -159,7 +159,7 @@ async function handleAuth(context: CommandContext, action: string | undefined, a
 			const [token] = args;
 
 			if (!token) {
-				throw new UsageError("Usage: theboard auth set-token <token>");
+				throw new UsageError("Usage: boardsh auth set-token <token>");
 			}
 
 			await setStoredToken(token);
@@ -177,7 +177,7 @@ async function handleAuth(context: CommandContext, action: string | undefined, a
 			const [baseUrl] = args;
 
 			if (!baseUrl) {
-				throw new UsageError("Usage: theboard auth set-base-url <url>");
+				throw new UsageError("Usage: boardsh auth set-base-url <url>");
 			}
 
 			await setStoredBaseUrl(baseUrl);
@@ -211,12 +211,12 @@ async function handleAuth(context: CommandContext, action: string | undefined, a
 			throw new UsageError(
 				[
 					"Usage:",
-					"  theboard login",
-					"  theboard logout",
-					"  theboard auth status",
-					"  theboard auth set-token <token>",
-					"  theboard auth clear-token",
-					"  theboard auth set-base-url <url>",
+					"  boardsh login",
+					"  boardsh logout",
+					"  boardsh auth status",
+					"  boardsh auth set-token <token>",
+					"  boardsh auth clear-token",
+					"  boardsh auth set-base-url <url>",
 				].join("\n"),
 			);
 	}
@@ -242,7 +242,7 @@ async function handleBoards(context: CommandContext, action: string | undefined,
 			const [boardId] = args;
 
 			if (!boardId) {
-				throw new UsageError("Usage: theboard boards get <board-id>");
+				throw new UsageError("Usage: boardsh boards get <board-id>");
 			}
 
 			const board = await api.getBoard(boardId);
@@ -258,7 +258,7 @@ async function handleBoards(context: CommandContext, action: string | undefined,
 
 		default:
 			throw new UsageError(
-				["Usage:", "  theboard boards list", "  theboard boards get <board-id>"].join("\n"),
+				["Usage:", "  boardsh boards list", "  boardsh boards get <board-id>"].join("\n"),
 			);
 	}
 }
@@ -271,7 +271,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 			const [boardId, cardId] = args;
 
 			if (!boardId || !cardId) {
-				throw new UsageError("Usage: theboard cards get <board-id> <card-id-or-code>");
+				throw new UsageError("Usage: boardsh cards get <board-id> <card-id-or-code>");
 			}
 
 			const response = await api.getCard(boardId, cardId);
@@ -301,7 +301,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 
 			if (!boardId || !values.list || !values.title) {
 				throw new UsageError(
-					"Usage: theboard cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+					"Usage: boardsh cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
 				);
 			}
 
@@ -338,7 +338,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 
 			if (!boardId || !cardId) {
 				throw new UsageError(
-					"Usage: theboard cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
+					"Usage: boardsh cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
 				);
 			}
 
@@ -410,7 +410,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 
 			if (!boardId || !cardId || !values.list || !values.index) {
 				throw new UsageError(
-					"Usage: theboard cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
+					"Usage: boardsh cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
 				);
 			}
 
@@ -445,7 +445,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 
 			if (!boardId || !cardId || !values.message) {
 				throw new UsageError(
-					"Usage: theboard cards comment <board-id> <card-id-or-code> --message <text>",
+					"Usage: boardsh cards comment <board-id> <card-id-or-code> --message <text>",
 				);
 			}
 
@@ -466,11 +466,11 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 			throw new UsageError(
 				[
 					"Usage:",
-					"  theboard cards get <board-id> <card-id-or-code>",
-					"  theboard cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
-					"  theboard cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
-					"  theboard cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
-					"  theboard cards comment <board-id> <card-id-or-code> --message <text>",
+					"  boardsh cards get <board-id> <card-id-or-code>",
+					"  boardsh cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+					"  boardsh cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
+					"  boardsh cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
+					"  boardsh cards comment <board-id> <card-id-or-code> --message <text>",
 				].join("\n"),
 			);
 	}
@@ -493,7 +493,7 @@ async function createClient(context: CommandContext, input: { requireToken?: boo
 	if (input.requireToken ?? true) {
 		if (!auth.token) {
 			throw new UsageError(
-				"Missing token. Run `theboard auth set-token <token>` or set THEBOARD_TOKEN.",
+				"Missing token. Run `boardsh auth set-token <token>` or set BOARDSH_TOKEN.",
 			);
 		}
 	}
@@ -575,7 +575,7 @@ function parseDueAt(value: string) {
 
 function renderHelp() {
 	return [
-		"theboard",
+		"boardsh",
 		"",
 		"CLI for The Board API.",
 		"",

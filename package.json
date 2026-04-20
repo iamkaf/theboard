@@ -1,10 +1,10 @@
 {
-  "name": "theboard",
+  "name": "boardsh",
   "version": "1.0.0",
   "description": "CLI for interacting with The Board API",
   "type": "module",
   "bin": {
-    "theboard": "dist/src/cli.js"
+    "boardsh": "dist/src/cli.js"
   },
   "exports": {
     ".": "./dist/src/index.js"
@@ -24,7 +24,7 @@
     "prepublishOnly": "npm run clean && npm run build"
   },
   "keywords": [
-    "theboard",
+    "boardsh",
     "board",
     "cli",
     "kanban",

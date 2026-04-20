@@ -70,7 +70,7 @@ export class BoardApiClient {
 		codeChallenge: string;
 		redirectUri: string;
 		client: {
-			name: "theboard";
+			name: "boardsh";
 			version: string;
 			hostname: string | null;
 			platform: string | null;

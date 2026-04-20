@@ -11,8 +11,8 @@ type ConfigFile = {
 
 export function getConfigDir() {
 	return process.env.XDG_CONFIG_HOME
-		? path.join(process.env.XDG_CONFIG_HOME, "theboard")
-		: path.join(os.homedir(), ".config", "theboard");
+		? path.join(process.env.XDG_CONFIG_HOME, "boardsh")
+		: path.join(os.homedir(), ".config", "boardsh");
 }
 
 export function getConfigPath() {
@@ -43,10 +43,10 @@ export async function loadAuthState(overrides: AuthState = {}): Promise<AuthStat
 	return {
 		baseUrl:
 			overrides.baseUrl ??
-			process.env.THEBOARD_BASE_URL ??
+			process.env.BOARDSH_BASE_URL ??
 			fileConfig.baseUrl ??
 			"https://board.kaf.sh/api",
-		token: overrides.token ?? process.env.THEBOARD_TOKEN ?? fileConfig.token,
+		token: overrides.token ?? process.env.BOARDSH_TOKEN ?? fileConfig.token,
 	};
 }
 
