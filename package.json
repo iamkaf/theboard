@@ -4,7 +4,7 @@
   "description": "CLI for interacting with The Board API",
   "type": "module",
   "bin": {
-    "theboard": "./dist/src/cli.js"
+    "theboard": "dist/src/cli.js"
   },
   "exports": {
     ".": "./dist/src/index.js"
