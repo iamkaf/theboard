@@ -1,10 +1,10 @@
 {
-  "name": "boardsh",
+  "name": "@iamkaf/board",
   "version": "1.0.0",
   "description": "CLI for interacting with The Board API",
   "type": "module",
   "bin": {
-    "boardsh": "dist/src/cli.js"
+    "board": "dist/src/cli.js"
   },
   "exports": {
     ".": "./dist/src/index.js"
@@ -24,7 +24,7 @@
     "prepublishOnly": "npm run clean && npm run build"
   },
   "keywords": [
-    "boardsh",
+    "board",
     "board",
     "cli",
     "kanban",

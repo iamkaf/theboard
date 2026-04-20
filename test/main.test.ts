@@ -86,8 +86,8 @@ test("cli can list boards as json", async () => {
 test("cli logout clears the local token", async () => {
 	let stdout = "";
 	let stderr = "";
-	const previousToken = process.env.BOARDSH_TOKEN;
-	delete process.env.BOARDSH_TOKEN;
+	const previousToken = process.env.BOARD_TOKEN;
+	delete process.env.BOARD_TOKEN;
 
 	try {
 		const exitCode = await runCli(["logout"], {
@@ -110,7 +110,7 @@ test("cli logout clears the local token", async () => {
 		assert.match(stdout, /Removed the local CLI token/);
 	} finally {
 		if (previousToken !== undefined) {
-			process.env.BOARDSH_TOKEN = previousToken;
+			process.env.BOARD_TOKEN = previousToken;
 		}
 	}
 });
@@ -136,7 +136,7 @@ test("cli reports the package version", async () => {
 
 	assert.equal(exitCode, 0);
 	assert.equal(stderr, "");
-	assert.equal(stdout, "boardsh 1.0.0\n");
+	assert.equal(stdout, "board 1.0.0\n");
 });
 
 test("cli cards update forwards epic flags", async () => {

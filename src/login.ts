@@ -29,7 +29,7 @@ export async function loginWithBrowser(input: {
 			codeChallenge,
 			redirectUri: callbackServer.redirectUri,
 			client: {
-				name: "boardsh",
+				name: "board",
 				version: CLI_VERSION,
 				hostname: safeHostname(),
 				platform: process.platform,
@@ -98,7 +98,7 @@ export async function loginWithBrowser(input: {
 			error instanceof BoardApiError &&
 			(error.status === 410 || error.message.includes("expired"))
 		) {
-			throw new Error("Authorization expired. Run `boardsh login` again.");
+			throw new Error("Authorization expired. Run `board login` again.");
 		}
 
 		throw error;

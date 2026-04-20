@@ -14,7 +14,7 @@ import {
 
 test("config roundtrips token and base url", async () => {
 	const previousConfigHome = process.env.XDG_CONFIG_HOME;
-	const tempDir = await mkdtemp(path.join(os.tmpdir(), "boardsh-config-"));
+	const tempDir = await mkdtemp(path.join(os.tmpdir(), "board-config-"));
 	process.env.XDG_CONFIG_HOME = tempDir;
 
 	try {
