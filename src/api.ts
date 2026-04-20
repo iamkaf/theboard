@@ -117,6 +117,7 @@ export class BoardApiClient {
 			title: string;
 			description?: string;
 			labelIds?: string[];
+			epicId?: string | null;
 		},
 	) {
 		return this.request<{ ok: true; card: CardRecord }>(
@@ -128,6 +129,7 @@ export class BoardApiClient {
 					title: input.title,
 					description: input.description ?? "",
 					labelIds: input.labelIds ?? [],
+					...(input.epicId !== undefined ? { epicId: input.epicId } : {}),
 				},
 			},
 		);
@@ -141,6 +143,7 @@ export class BoardApiClient {
 			description?: string;
 			labelIds?: string[];
 			assigneeUserId?: string | null;
+			epicId?: string | null;
 			dueAt?: number | null;
 		},
 	) {

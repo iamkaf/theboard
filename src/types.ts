@@ -18,12 +18,18 @@ export type AuthenticatedUser = {
 	avatarUrl: string | null;
 };
 
+export type PersonalAccessTokenScope =
+	| "boards:read"
+	| "boards:write"
+	| "tokens:read"
+	| "tokens:write";
+
 export type PersonalAccessTokenRecord = {
 	id: string;
 	userId: string;
 	name: string;
 	tokenPrefix: string;
-	scopes: string[];
+	scopes: PersonalAccessTokenScope[];
 	boardIds: string[] | null;
 	createdAt: number;
 	lastUsedAt: number | null;
@@ -42,7 +48,7 @@ export type CliAuthorizationRecord = {
 	id: string;
 	status: CliAuthorizationStatus;
 	expiresAt: number;
-	scopes: string[];
+	scopes: PersonalAccessTokenScope[];
 	tokenExpiresAt: number;
 	redirectUri: string;
 	state: string;
@@ -90,7 +96,17 @@ export type CardRecord = {
 	labels: CardLabel[];
 	position: number;
 	assigneeUserId: string | null;
+	epicId: string | null;
 	dueAt: number | null;
+};
+
+export type EpicRecord = {
+	id: string;
+	boardId: string;
+	name: string;
+	description: string;
+	color: string;
+	position: number;
 };
 
 export type BoardDetail = {
@@ -102,6 +118,7 @@ export type BoardDetail = {
 		avatarUrl: string | null;
 	}>;
 	boardLabels: CardLabel[];
+	epics: EpicRecord[];
 	cardTemplates: Array<{
 		id: string;
 		boardId: string;
@@ -122,10 +139,12 @@ export type CardActivityRecord = {
 	kind: string;
 	message: string;
 	createdAt: number;
-	actorId: string | null;
-	actorUsername: string | null;
-	actorGlobalName: string | null;
-	actorAvatarUrl: string | null;
+	actor: {
+		id: string;
+		username: string;
+		globalName: string | null;
+		avatarUrl: string | null;
+	} | null;
 };
 
 export type ApiInfo = {

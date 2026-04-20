@@ -20,7 +20,9 @@ export type {
 	CardRecord,
 	CliAuthorizationRecord,
 	CliAuthorizationStatus,
+	EpicRecord,
 	JsonValue,
 	ListRecord,
+	PersonalAccessTokenScope,
 	PersonalAccessTokenRecord,
 } from "./types.js";

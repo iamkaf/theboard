@@ -115,7 +115,8 @@ theboard cards get brd_ceffb1e353204f8c90c7df689c823e53 BRD-29
 theboard cards create brd_ceffb1e353204f8c90c7df689c823e53 \
   --list lst_7830ab37c63a4e8584666a5488981cb3 \
   --title "Ship CLI" \
-  --description "Created from the terminal"
+  --description "Created from the terminal" \
+  --epic epc_1234567890abcdef
 ```
 
 ### Update a card
@@ -130,6 +131,7 @@ Optional update fields:
 - `--description <text>`
 - `--label <label-id>` and `--clear-labels`
 - `--assignee <user-id>` and `--clear-assignee`
+- `--epic <epic-id>` and `--clear-epic`
 - `--due-at <iso-or-ms>` and `--clear-due-at`
 
 ### Move a card

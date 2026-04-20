@@ -72,6 +72,10 @@ export function renderCard(card: CardRecord) {
 		lines.push(`dueAt: ${new Date(card.dueAt).toISOString()}`);
 	}
 
+	if (card.epicId !== null) {
+		lines.push(`epic: ${card.epicId}`);
+	}
+
 	if (card.description) {
 		lines.push("description:");
 		lines.push(card.description);

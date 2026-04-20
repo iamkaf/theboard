@@ -7,8 +7,7 @@ import { startCallbackServer } from "./callback-server.js";
 import { getConfigPath, setStoredToken } from "./config.js";
 import type { CliIo, OutputMode } from "./output.js";
 import { print } from "./output.js";
-
-const CLI_VERSION = "0.1.0";
+import { CLI_VERSION } from "./version.js";
 const LOGIN_TIMEOUT_MS = 1000 * 60 * 10;
 
 export async function loginWithBrowser(input: {

@@ -20,6 +20,7 @@ import {
 	type OutputMode,
 } from "./output.js";
 import type { CardRecord, JsonValue } from "./types.js";
+import { CLI_VERSION } from "./version.js";
 
 type CommandContext = {
 	io: CliIo;
@@ -36,7 +37,7 @@ export async function runCli(
 		const { globals, rest } = parseGlobalArgs(argv);
 
 		if (globals.version) {
-			io.stdout.write("theboard 0.1.0\n");
+			io.stdout.write(`theboard ${CLI_VERSION}\n`);
 			return 0;
 		}
 
@@ -293,13 +294,14 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 					title: { type: "string" },
 					description: { type: "string", default: "" },
 					label: { type: "string", multiple: true, default: [] },
+					epic: { type: "string" },
 				},
 			});
 			const [boardId] = positionals;
 
 			if (!boardId || !values.list || !values.title) {
 				throw new UsageError(
-					"Usage: theboard cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>]",
+					"Usage: theboard cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
 				);
 			}
 
@@ -308,6 +310,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 				title: values.title,
 				description: values.description,
 				labelIds: values.label,
+				...(values.epic !== undefined ? { epicId: values.epic } : {}),
 			});
 
 			printCardResponse(context, response.card);
@@ -325,6 +328,8 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 					"clear-labels": { type: "boolean", default: false },
 					assignee: { type: "string" },
 					"clear-assignee": { type: "boolean", default: false },
+					epic: { type: "string" },
+					"clear-epic": { type: "boolean", default: false },
 					"due-at": { type: "string" },
 					"clear-due-at": { type: "boolean", default: false },
 				},
@@ -333,7 +338,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 
 			if (!boardId || !cardId) {
 				throw new UsageError(
-					"Usage: theboard cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--due-at <iso-or-ms>] [--clear-due-at]",
+					"Usage: theboard cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
 				);
 			}
 
@@ -342,6 +347,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 				description?: string;
 				labelIds?: string[];
 				assigneeUserId?: string | null;
+				epicId?: string | null;
 				dueAt?: number | null;
 			} = {};
 
@@ -363,6 +369,12 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 				payload.assigneeUserId = null;
 			} else if (values.assignee !== undefined) {
 				payload.assigneeUserId = values.assignee;
+			}
+
+			if (values["clear-epic"]) {
+				payload.epicId = null;
+			} else if (values.epic !== undefined) {
+				payload.epicId = values.epic;
 			}
 
 			if (values["clear-due-at"]) {
@@ -455,8 +467,8 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 				[
 					"Usage:",
 					"  theboard cards get <board-id> <card-id-or-code>",
-					"  theboard cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>]",
-					"  theboard cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>]",
+					"  theboard cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+					"  theboard cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
 					"  theboard cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
 					"  theboard cards comment <board-id> <card-id-or-code> --message <text>",
 				].join("\n"),
@@ -585,8 +597,8 @@ function renderHelp() {
 		"  boards list",
 		"  boards get <board-id>",
 		"  cards get <board-id> <card-id-or-code>",
-		"  cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>]",
-		"  cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>]",
+		"  cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+		"  cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
 		"  cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
 		"  cards comment <board-id> <card-id-or-code> --message <text>",
 	].join("\n");
