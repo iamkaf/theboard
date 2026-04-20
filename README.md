@@ -1,153 +1,88 @@
-# theboard
+<p align="center">
+  <img src="assets/banner.png" alt="theboard banner" width="480" />
+</p>
 
-`theboard` is an npm CLI for interacting with [The Board](https://board.kaf.sh) over its JSON API.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-a78bfa?style=for-the-badge&labelColor=1a1a2e" alt="MIT" /></a>
+  <img src="https://img.shields.io/badge/node-%E2%89%A522-5eead4?style=for-the-badge&logo=node.js&logoColor=5eead4&labelColor=1a1a2e" alt="Node 22+" />
+  <a href="https://www.npmjs.com/package/theboard"><img src="https://img.shields.io/npm/v/theboard?style=for-the-badge&color=fbbf24&logo=npm&logoColor=fbbf24&labelColor=1a1a2e" alt="npm" /></a>
+</p>
 
-It stores local config in `~/.config/theboard/config.json` and supports browser-based login plus the most common board and card flows from the terminal.
+<h1 align="center">theboard</h1>
 
-## Features
+<p align="center">
+  <strong>A zero-dependency CLI for interacting with The Board from your terminal.</strong>
+</p>
 
-- Zero runtime dependencies
-- Uses modern Node built-ins: `fetch`, `util.parseArgs`, and `node:test`
-- Browser-based CLI login
-- Works with The Board PATs under the hood
-- Supports card routes by either internal card ID or public card code like `BRD-54`
-- Text output for humans and `--json` output for scripting
+---
 
-## Install
+Theboard provides browser-based login and manages card and board flows directly from the command line without heavy third-party dependencies.
+
+## Quick Start
+
+### Install
 
 ```bash
 npm install -g theboard
 ```
 
-Or run it without installing globally:
+*(You can also use `npx theboard` to run without installing globally.)*
 
-```bash
-npx theboard --help
-```
-
-## Authenticate
-
-Preferred flow:
+### Authenticate
 
 ```bash
 theboard login
 ```
 
-This will:
+This opens `board.kaf.sh` in your browser, asks you to approve CLI access, and securely stores the token locally.
 
-1. Open `board.kaf.sh` in your browser
-2. Ask you to approve CLI access
-3. Store the resulting CLI token locally
+## Usage
 
-Remove the local CLI token:
+### Authentication & Config
 
-```bash
-theboard logout
-```
+| Command | Description |
+|---------|-------------|
+| `theboard login` | Authenticate via browser |
+| `theboard logout` | Remove the local CLI token |
+| `theboard auth status` | Check current authentication status |
+| `theboard auth set-token <token>` | Manually configure a Personal Access Token (PAT) |
+| `theboard auth set-base-url <url>` | Point the CLI at a different API base URL |
+| `theboard info` | View API information |
 
-Optional: point the CLI at a different API base URL:
+The CLI stores local config in `~/.config/theboard/config.json`. You can override these using environment variables:
 
-```bash
-theboard auth set-base-url https://board.kaf.sh/api
-```
+- `THEBOARD_TOKEN`
+- `THEBOARD_BASE_URL`
 
-You can also use environment variables instead of stored config:
+### Boards
 
-```bash
-export THEBOARD_TOKEN="brd_pat_your_token_here"
-export THEBOARD_BASE_URL="https://board.kaf.sh/api"
-```
+| Command | Description |
+|---------|-------------|
+| `theboard boards list` | List available boards (use `--json` for scripting) |
+| `theboard boards get <board-id>` | Get details for a specific board |
 
-### Manual fallback
+### Cards
 
-If you already have a PAT and want to configure it directly:
+Cards can be targeted by internal ID (`crd_...`) or public code (`BRD-29`).
 
-```bash
-theboard auth set-token brd_pat_your_token_here
-```
+| Command | Description |
+|---------|-------------|
+| `theboard cards get <board-id> <card-id>` | View card details |
+| `theboard cards create <board-id> --list <list-id> --title <text> [options]` | Create a new card |
+| `theboard cards update <board-id> <card-id> [options]` | Update an existing card |
+| `theboard cards move <board-id> <card-id> --list <list-id> --index <num>` | Move a card to a different list |
+| `theboard cards comment <board-id> <card-id> --message <text>` | Add a comment to a card |
 
-## Commands
+**Card Options:**
 
-### API info
-
-```bash
-theboard info
-```
-
-### Auth status
-
-```bash
-theboard auth status
-```
-
-### Browser login
-
-```bash
-theboard login
-theboard logout
-```
-
-### List boards
-
-```bash
-theboard boards list
-theboard --json boards list
-```
-
-### Get a board
-
-```bash
-theboard boards get brd_ceffb1e353204f8c90c7df689c823e53
-```
-
-### Get a card
-
-Either form works:
-
-```bash
-theboard cards get brd_ceffb1e353204f8c90c7df689c823e53 crd_460ef1144a5d451dbe30d56353bef301
-theboard cards get brd_ceffb1e353204f8c90c7df689c823e53 BRD-29
-```
-
-### Create a card
-
-```bash
-theboard cards create brd_ceffb1e353204f8c90c7df689c823e53 \
-  --list lst_7830ab37c63a4e8584666a5488981cb3 \
-  --title "Ship CLI" \
-  --description "Created from the terminal" \
-  --epic epc_1234567890abcdef
-```
-
-### Update a card
-
-```bash
-theboard cards update brd_ceffb1e353204f8c90c7df689c823e53 BRD-29 \
-  --title "Replace the description editor with a proper editor"
-```
-
-Optional update fields:
-
-- `--description <text>`
-- `--label <label-id>` and `--clear-labels`
-- `--assignee <user-id>` and `--clear-assignee`
-- `--epic <epic-id>` and `--clear-epic`
-- `--due-at <iso-or-ms>` and `--clear-due-at`
-
-### Move a card
-
-```bash
-theboard cards move brd_ceffb1e353204f8c90c7df689c823e53 BRD-29 \
-  --list lst_af4a07d59a31478d8dd45e09dc8d6708 \
-  --index 0
-```
-
-### Comment on a card
-
-```bash
-theboard cards comment brd_ceffb1e353204f8c90c7df689c823e53 BRD-29 \
-  --message "Done via CLI"
-```
+| Option | Actions | Description |
+|--------|---------|-------------|
+| Title | `--title <text>` | Set the card title |
+| Description | `--description <text>` | Set the card description |
+| Label | `--label <id>`, `--clear-labels` | Modify or clear labels |
+| Assignee | `--assignee <id>`, `--clear-assignee` | Modify or clear assignee |
+| Epic | `--epic <id>`, `--clear-epic` | Modify or clear epic |
+| Due Date | `--due-at <iso-or-ms>`, `--clear-due-at` | Modify or clear due date |
 
 ## Development
 
@@ -156,3 +91,7 @@ npm install
 npm run build
 npm test
 ```
+
+## License
+
+[MIT](LICENSE)
