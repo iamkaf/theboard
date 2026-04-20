@@ -11,12 +11,12 @@
 <h1 align="center">theboard</h1>
 
 <p align="center">
-  <strong>A zero-dependency CLI for interacting with The Board from your terminal.</strong>
+  <strong>A zero-dependency CLI for interacting with <a href="https://board.kaf.sh">The Board</a> from your terminal.</strong>
 </p>
 
 ---
 
-Theboard provides browser-based login and manages card and board flows directly from the command line without heavy third-party dependencies.
+Theboard provides browser-based login and manages card and board flows for [The Board](https://board.kaf.sh) directly from the command line without heavy third-party dependencies.
 
 ## Quick Start
 
