@@ -8,11 +8,13 @@ import { BoardApiClient } from "../src/api.js";
 test("api client sends bearer auth and json body", async () => {
 	let seenAuthorization = "";
 	let seenMethod = "";
+	let seenUrl = "";
 	let seenBody = "";
 
 	const server = createServer((request: IncomingMessage, response: ServerResponse) => {
 		seenAuthorization = request.headers.authorization ?? "";
 		seenMethod = request.method ?? "";
+		seenUrl = request.url ?? "";
 		request.setEncoding("utf8");
 		request.on("data", (chunk: string) => {
 			seenBody += chunk;
@@ -51,7 +53,7 @@ test("api client sends bearer auth and json body", async () => {
 			baseUrl: `http://127.0.0.1:${address.port}`,
 			token: "brd_pat_test",
 		});
-		const response = await client.createCard("brd_1", {
+		const response = await client.createCard("board-1", {
 			listId: "lst_1",
 			title: "Created",
 		});
@@ -59,12 +61,13 @@ test("api client sends bearer auth and json body", async () => {
 		assert.equal(response.card.identifier, "BRD-1");
 		assert.equal(seenAuthorization, "Bearer brd_pat_test");
 		assert.equal(seenMethod, "POST");
-			assert.deepEqual(JSON.parse(seenBody), {
-				listId: "lst_1",
-				title: "Created",
-				description: "",
-				labelIds: [],
-			});
+		assert.equal(seenUrl, "/boards/board-1/cards");
+		assert.deepEqual(JSON.parse(seenBody), {
+			listId: "lst_1",
+			title: "Created",
+			description: "",
+			labelIds: [],
+		});
 	} finally {
 		await new Promise<void>((resolve, reject) => {
 			server.close((error?: Error) => {

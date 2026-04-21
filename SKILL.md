@@ -36,19 +36,21 @@ board --json boards list
 Get a board:
 
 ```bash
-board boards get <boardId>
+board boards get engineering-tasks-f44a88
 ```
+
+`<board>` accepts either a board slug or an internal board id. Use the slug by default.
 
 Get a card:
 
 ```bash
-board cards get <boardId> BRD-29
+board cards get engineering-tasks-f44a88 BRD-29
 ```
 
 Create a card:
 
 ```bash
-board cards create <boardId> \
+board cards create engineering-tasks-f44a88 \
   --list <listId> \
   --title "Ship CLI" \
   --description "Created from the terminal"
@@ -57,7 +59,7 @@ board cards create <boardId> \
 Move a card:
 
 ```bash
-board cards move <boardId> BRD-29 \
+board cards move engineering-tasks-f44a88 BRD-29 \
   --list <listId> \
   --index 0
 ```
@@ -65,12 +67,13 @@ board cards move <boardId> BRD-29 \
 Comment on a card:
 
 ```bash
-board cards comment <boardId> BRD-29 \
+board cards comment engineering-tasks-f44a88 BRD-29 \
   --message "Done via CLI"
 ```
 
 ## Notes
 
+- Card routes remain board-scoped. The board argument accepts either a slug or an internal id, even when you know the card code.
 - Card routes accept either the internal `crd_...` id or the public card code like `BRD-29`.
 - The Board base API URL is `https://board.kaf.sh/api`.
 - Descriptions and comments are markdown strings.

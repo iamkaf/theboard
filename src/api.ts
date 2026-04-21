@@ -55,13 +55,15 @@ export class BoardApiClient {
 		return this.request<{ ok: true; boards: BoardSummary[] }>("/boards");
 	}
 
-	getBoard(boardId: string) {
-		return this.request<{ ok: true } & BoardDetail>(`/boards/${encodeURIComponent(boardId)}`);
+	getBoard(boardIdentifier: string) {
+		return this.request<{ ok: true } & BoardDetail>(
+			`/boards/${encodeURIComponent(boardIdentifier)}`,
+		);
 	}
 
-	getCard(boardId: string, cardId: string) {
+	getCard(boardIdentifier: string, cardId: string) {
 		return this.request<{ ok: true; card: CardRecord }>(
-			`/boards/${encodeURIComponent(boardId)}/cards/${encodeURIComponent(cardId)}`,
+			`/boards/${encodeURIComponent(boardIdentifier)}/cards/${encodeURIComponent(cardId)}`,
 		);
 	}
 
@@ -111,7 +113,7 @@ export class BoardApiClient {
 	}
 
 	createCard(
-		boardId: string,
+		boardIdentifier: string,
 		input: {
 			listId: string;
 			title: string;
@@ -121,7 +123,7 @@ export class BoardApiClient {
 		},
 	) {
 		return this.request<{ ok: true; card: CardRecord }>(
-			`/boards/${encodeURIComponent(boardId)}/cards`,
+			`/boards/${encodeURIComponent(boardIdentifier)}/cards`,
 			{
 				method: "POST",
 				body: {
@@ -136,7 +138,7 @@ export class BoardApiClient {
 	}
 
 	updateCard(
-		boardId: string,
+		boardIdentifier: string,
 		cardId: string,
 		input: {
 			title?: string;
@@ -148,7 +150,7 @@ export class BoardApiClient {
 		},
 	) {
 		return this.request<{ ok: true; card: CardRecord | null }>(
-			`/boards/${encodeURIComponent(boardId)}/cards/${encodeURIComponent(cardId)}`,
+			`/boards/${encodeURIComponent(boardIdentifier)}/cards/${encodeURIComponent(cardId)}`,
 			{
 				method: "PATCH",
 				body: input,
@@ -156,9 +158,9 @@ export class BoardApiClient {
 		);
 	}
 
-	moveCard(boardId: string, cardId: string, input: { listId: string; index: number }) {
+	moveCard(boardIdentifier: string, cardId: string, input: { listId: string; index: number }) {
 		return this.request<{ ok: true; card: CardRecord | null; cards: CardRecord[] }>(
-			`/boards/${encodeURIComponent(boardId)}/cards/${encodeURIComponent(cardId)}/move`,
+			`/boards/${encodeURIComponent(boardIdentifier)}/cards/${encodeURIComponent(cardId)}/move`,
 			{
 				method: "PATCH",
 				body: input,
@@ -166,9 +168,9 @@ export class BoardApiClient {
 		);
 	}
 
-	addComment(boardId: string, cardId: string, input: { message: string }) {
+	addComment(boardIdentifier: string, cardId: string, input: { message: string }) {
 		return this.request<{ ok: true; activity: CardActivityRecord }>(
-			`/boards/${encodeURIComponent(boardId)}/cards/${encodeURIComponent(cardId)}/comments`,
+			`/boards/${encodeURIComponent(boardIdentifier)}/cards/${encodeURIComponent(cardId)}/comments`,
 			{
 				method: "POST",
 				body: input,

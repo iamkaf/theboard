@@ -239,13 +239,13 @@ async function handleBoards(context: CommandContext, action: string | undefined,
 		}
 
 		case "get": {
-			const [boardId] = args;
+			const [boardIdentifier] = args;
 
-			if (!boardId) {
-				throw new UsageError("Usage: board boards get <board-id>");
+			if (!boardIdentifier) {
+				throw new UsageError("Usage: board boards get <board>");
 			}
 
-			const board = await api.getBoard(boardId);
+			const board = await api.getBoard(boardIdentifier);
 
 			if (context.outputMode === "json") {
 				print(context.io, board, "json");
@@ -258,7 +258,13 @@ async function handleBoards(context: CommandContext, action: string | undefined,
 
 		default:
 			throw new UsageError(
-				["Usage:", "  board boards list", "  board boards get <board-id>"].join("\n"),
+				[
+					"Usage:",
+					"  board boards list",
+					"  board boards get <board>",
+					"",
+					"<board> accepts either a board slug or an internal board id.",
+				].join("\n"),
 			);
 	}
 }
@@ -268,13 +274,13 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 
 	switch (action) {
 		case "get": {
-			const [boardId, cardId] = args;
+			const [boardIdentifier, cardId] = args;
 
-			if (!boardId || !cardId) {
-				throw new UsageError("Usage: board cards get <board-id> <card-id-or-code>");
+			if (!boardIdentifier || !cardId) {
+				throw new UsageError("Usage: board cards get <board> <card-id-or-code>");
 			}
 
-			const response = await api.getCard(boardId, cardId);
+			const response = await api.getCard(boardIdentifier, cardId);
 
 			if (context.outputMode === "json") {
 				print(context.io, response, "json");
@@ -297,15 +303,15 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 					epic: { type: "string" },
 				},
 			});
-			const [boardId] = positionals;
+			const [boardIdentifier] = positionals;
 
-			if (!boardId || !values.list || !values.title) {
+			if (!boardIdentifier || !values.list || !values.title) {
 				throw new UsageError(
-					"Usage: board cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+					"Usage: board cards create <board> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
 				);
 			}
 
-			const response = await api.createCard(boardId, {
+			const response = await api.createCard(boardIdentifier, {
 				listId: values.list,
 				title: values.title,
 				description: values.description,
@@ -334,11 +340,11 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 					"clear-due-at": { type: "boolean", default: false },
 				},
 			});
-			const [boardId, cardId] = positionals;
+			const [boardIdentifier, cardId] = positionals;
 
-			if (!boardId || !cardId) {
+			if (!boardIdentifier || !cardId) {
 				throw new UsageError(
-					"Usage: board cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
+					"Usage: board cards update <board> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
 				);
 			}
 
@@ -387,7 +393,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 				throw new UsageError("No card fields to update.");
 			}
 
-			const response = await api.updateCard(boardId, cardId, payload);
+			const response = await api.updateCard(boardIdentifier, cardId, payload);
 
 			if (!response.card) {
 				throw new UsageError("Card was not returned by the API.");
@@ -406,11 +412,11 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 					index: { type: "string" },
 				},
 			});
-			const [boardId, cardId] = positionals;
+			const [boardIdentifier, cardId] = positionals;
 
-			if (!boardId || !cardId || !values.list || !values.index) {
+			if (!boardIdentifier || !cardId || !values.list || !values.index) {
 				throw new UsageError(
-					"Usage: board cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
+					"Usage: board cards move <board> <card-id-or-code> --list <list-id> --index <number>",
 				);
 			}
 
@@ -420,7 +426,7 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 				throw new UsageError("--index must be a non-negative integer");
 			}
 
-			const response = await api.moveCard(boardId, cardId, {
+			const response = await api.moveCard(boardIdentifier, cardId, {
 				listId: values.list,
 				index,
 			});
@@ -441,15 +447,15 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 					message: { type: "string" },
 				},
 			});
-			const [boardId, cardId] = positionals;
+			const [boardIdentifier, cardId] = positionals;
 
-			if (!boardId || !cardId || !values.message) {
+			if (!boardIdentifier || !cardId || !values.message) {
 				throw new UsageError(
-					"Usage: board cards comment <board-id> <card-id-or-code> --message <text>",
+					"Usage: board cards comment <board> <card-id-or-code> --message <text>",
 				);
 			}
 
-			const response = await api.addComment(boardId, cardId, {
+			const response = await api.addComment(boardIdentifier, cardId, {
 				message: values.message,
 			});
 
@@ -466,11 +472,13 @@ async function handleCards(context: CommandContext, action: string | undefined, 
 			throw new UsageError(
 				[
 					"Usage:",
-					"  board cards get <board-id> <card-id-or-code>",
-					"  board cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
-					"  board cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
-					"  board cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
-					"  board cards comment <board-id> <card-id-or-code> --message <text>",
+					"  board cards get <board> <card-id-or-code>",
+					"  board cards create <board> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+					"  board cards update <board> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
+					"  board cards move <board> <card-id-or-code> --list <list-id> --index <number>",
+					"  board cards comment <board> <card-id-or-code> --message <text>",
+					"",
+					"<board> accepts either a board slug or an internal board id.",
 				].join("\n"),
 			);
 	}
@@ -595,12 +603,14 @@ function renderHelp() {
 		"  auth clear-token",
 		"  auth set-base-url <url>",
 		"  boards list",
-		"  boards get <board-id>",
-		"  cards get <board-id> <card-id-or-code>",
-		"  cards create <board-id> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
-		"  cards update <board-id> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
-		"  cards move <board-id> <card-id-or-code> --list <list-id> --index <number>",
-		"  cards comment <board-id> <card-id-or-code> --message <text>",
+		"  boards get <board>",
+		"  cards get <board> <card-id-or-code>",
+		"  cards create <board> --list <list-id> --title <title> [--description <text>] [--label <label-id>] [--epic <epic-id>]",
+		"  cards update <board> <card-id-or-code> [--title <title>] [--description <text>] [--label <label-id>] [--clear-labels] [--assignee <user-id>] [--clear-assignee] [--epic <epic-id>] [--clear-epic] [--due-at <iso-or-ms>] [--clear-due-at]",
+		"  cards move <board> <card-id-or-code> --list <list-id> --index <number>",
+		"  cards comment <board> <card-id-or-code> --message <text>",
+		"",
+		"<board> accepts either a board slug or an internal board id.",
 	].join("\n");
 }
 

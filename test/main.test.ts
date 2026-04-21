@@ -145,7 +145,7 @@ test("cli cards update forwards epic flags", async () => {
 	const server = createServer((request: IncomingMessage, response: ServerResponse) => {
 		assert.equal(request.headers.authorization, "Bearer brd_pat_test");
 		assert.equal(request.method, "PATCH");
-		assert.equal(request.url, "/boards/brd_1/cards/BRD-1");
+		assert.equal(request.url, "/boards/board-1/cards/BRD-1");
 		request.setEncoding("utf8");
 		request.on("data", (chunk: string) => {
 			seenBody += chunk;
@@ -191,7 +191,7 @@ test("cli cards update forwards epic flags", async () => {
 				"brd_pat_test",
 				"cards",
 				"update",
-				"brd_1",
+				"board-1",
 				"BRD-1",
 				"--clear-epic",
 			],

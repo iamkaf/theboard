@@ -59,19 +59,21 @@ The CLI stores local config in `~/.config/board/config.json`. You can override t
 | Command | Description |
 |---------|-------------|
 | `board boards list` | List available boards (use `--json` for scripting) |
-| `board boards get <board-id>` | Get details for a specific board |
+| `board boards get <board>` | Get details for a specific board by slug or internal id |
 
 ### Cards
+
+`<board>` accepts either a board slug or an internal board id. Use the slug by default.
 
 Cards can be targeted by internal ID (`crd_...`) or public code (`BRD-29`).
 
 | Command | Description |
 |---------|-------------|
-| `board cards get <board-id> <card-id>` | View card details |
-| `board cards create <board-id> --list <list-id> --title <text> [options]` | Create a new card |
-| `board cards update <board-id> <card-id> [options]` | Update an existing card |
-| `board cards move <board-id> <card-id> --list <list-id> --index <num>` | Move a card to a different list |
-| `board cards comment <board-id> <card-id> --message <text>` | Add a comment to a card |
+| `board cards get <board> <card-id>` | View card details |
+| `board cards create <board> --list <list-id> --title <text> [options]` | Create a new card |
+| `board cards update <board> <card-id> [options]` | Update an existing card |
+| `board cards move <board> <card-id> --list <list-id> --index <num>` | Move a card to a different list |
+| `board cards comment <board> <card-id> --message <text>` | Add a comment to a card |
 
 **Card Options:**
 
