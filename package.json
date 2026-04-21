@@ -32,6 +32,14 @@
   ],
   "author": "Kaf",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamkaf/theboard"
+  },
+  "homepage": "https://github.com/iamkaf/theboard",
+  "bugs": {
+    "url": "https://github.com/iamkaf/theboard/issues"
+  },
   "engines": {
     "node": ">=22"
   },
