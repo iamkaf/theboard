@@ -187,6 +187,7 @@ export class BoardApiClient {
 	): Promise<T> {
 		const headers = new Headers({
 			accept: "application/json",
+			"x-board-source": "cli",
 		});
 
 		if (this.token) {
