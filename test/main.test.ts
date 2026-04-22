@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import test from "node:test";
 
 import { runCli } from "../src/main.js";
+import { CLI_VERSION } from "../src/version.js";
 
 test("cli can list boards as json", async () => {
 	const server = createServer((request: IncomingMessage, response: ServerResponse) => {
@@ -136,7 +137,7 @@ test("cli reports the package version", async () => {
 
 	assert.equal(exitCode, 0);
 	assert.equal(stderr, "");
-	assert.equal(stdout, "board 1.0.0\n");
+	assert.equal(stdout, `board ${CLI_VERSION}\n`);
 });
 
 test("cli cards update forwards epic flags", async () => {
