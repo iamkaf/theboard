@@ -69,6 +69,8 @@ Get a board:
 
 ```bash
 board board get BRD
+board board create --name "New Board" --code NEW
+board board update BRD --name "Renamed Board"
 ```
 
 List lists:
@@ -76,6 +78,17 @@ List lists:
 ```bash
 board lists list BRD
 board column list --json
+board list create --title Review
+board list setup --preset planning
+```
+
+Labels and epics:
+
+```bash
+board label list
+board label create --text Bug --color red
+board epic list
+board epic create --name Alpha --color blue --status active
 ```
 
 List cards:
@@ -91,6 +104,8 @@ Get a card:
 ```bash
 board card get BRD-29
 board card view BRD-29
+board card activity BRD-29
+board card comments BRD-29
 ```
 
 Create a card:
@@ -105,7 +120,7 @@ board card create \
 Update a card:
 
 ```bash
-board cards update BRD-29 \
+board card update BRD-29 \
   --title "Ship CLI" \
   --description "Updated from the terminal"
 ```
@@ -123,6 +138,15 @@ Comment on a card:
 
 ```bash
 board card comment BRD-29 --message "Done via CLI"
+```
+
+Card lifecycle:
+
+```bash
+board card reorder --list Doing --cards BRD-29,BRD-30
+board card link BRD-29 --target BRD-30 --relation relates_to
+board card templates
+board card archive BRD-29 --force
 ```
 
 Literal `\n` in descriptions and comments is sent as an actual newline.

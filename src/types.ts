@@ -68,6 +68,8 @@ export type BoardSummary = {
 	name: string;
 	description: string;
 	visibility: "private" | "public";
+	allowPublicComments?: boolean | number;
+	epicCompletionListId?: string | null;
 	role: "owner" | "admin" | "member" | null;
 	position: number;
 	updatedAt: number;
@@ -99,6 +101,9 @@ export type CardRecord = {
 	assigneeUserId: string | null;
 	epicId: string | null;
 	dueAt: number | null;
+	blockedAt?: number | null;
+	blockedReason?: string;
+	blockedByUserId?: string | null;
 };
 
 export type CardWithList = CardRecord & {
@@ -111,7 +116,32 @@ export type EpicRecord = {
 	name: string;
 	description: string;
 	color: string;
+	status?: "planned" | "active" | "paused" | "completed" | "canceled";
+	ownerUserId?: string | null;
+	startAt?: number | null;
+	targetAt?: number | null;
+	completedAt?: number | null;
+	archivedAt?: number | null;
 	position: number;
+};
+
+export type CardTemplateRecord = {
+	id: string;
+	boardId: string;
+	name: string;
+	title: string;
+	description: string;
+	labels: CardLabel[];
+	position: number;
+};
+
+export type CardLinkRecord = {
+	id: string;
+	boardId: string;
+	sourceCardId: string;
+	targetCardId: string;
+	relation: "blocks" | "blocked_by" | "relates_to";
+	createdAt: number;
 };
 
 export type BoardDetail = {
@@ -124,15 +154,7 @@ export type BoardDetail = {
 	}>;
 	boardLabels: CardLabel[];
 	epics: EpicRecord[];
-	cardTemplates: Array<{
-		id: string;
-		boardId: string;
-		name: string;
-		title: string;
-		description: string;
-		labels: CardLabel[];
-		position: number;
-	}>;
+	cardTemplates: CardTemplateRecord[];
 	lists: ListRecord[];
 	cards: CardRecord[];
 };

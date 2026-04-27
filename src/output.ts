@@ -2,8 +2,11 @@ import type {
 	BoardDetail,
 	BoardSummary,
 	CardActivityRecord,
+	CardLabel,
 	CardRecord,
+	CardTemplateRecord,
 	CardWithList,
+	EpicRecord,
 	JsonValue,
 	ListRecord,
 } from "./types.js";
@@ -51,6 +54,39 @@ export function renderLists(lists: ListRecord[], cards: CardRecord[] = []) {
 			const count = cards.filter((card) => card.listId === list.id).length;
 			return `${list.title.padEnd(18)} ${String(count).padStart(3)} cards  ${list.id}`;
 		})
+		.join("\n");
+}
+
+export function renderLabels(labels: CardLabel[]) {
+	if (labels.length === 0) {
+		return "No labels found.";
+	}
+
+	return labels
+		.map((label) => `${(label.text || "(untitled)").padEnd(20)} ${label.color.padEnd(8)} ${label.id}`)
+		.join("\n");
+}
+
+export function renderEpics(epics: EpicRecord[]) {
+	if (epics.length === 0) {
+		return "No epics found.";
+	}
+
+	return epics
+		.map((epic) => {
+			const status = epic.status ? ` ${epic.status}` : "";
+			return `${epic.name.padEnd(24)} ${epic.color}${status}  ${epic.id}`;
+		})
+		.join("\n");
+}
+
+export function renderTemplates(templates: CardTemplateRecord[]) {
+	if (templates.length === 0) {
+		return "No card templates found.";
+	}
+
+	return templates
+		.map((template) => `${template.name.padEnd(24)} ${template.title}  ${template.id}`)
 		.join("\n");
 }
 
@@ -127,6 +163,14 @@ export function renderCard(card: CardRecord) {
 
 export function renderActivity(activity: CardActivityRecord) {
 	return `${activity.kind} ${new Date(activity.createdAt).toISOString()}\n${activity.message}`;
+}
+
+export function renderActivityList(activity: CardActivityRecord[]) {
+	if (activity.length === 0) {
+		return "No activity found.";
+	}
+
+	return activity.map(renderActivity).join("\n\n");
 }
 
 function formatText(value: JsonValue): string {

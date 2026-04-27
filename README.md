@@ -81,8 +81,11 @@ Supported globals:
 
 ```bash
 board boards list
+board board create --name "Warden" --code WRDN
 board board get BRD
+board board update BRD --name "Board"
 board board use BRD
+board board archive OLD --force
 ```
 
 `board board use <board>` stores a default board so card commands can omit the board argument:
@@ -105,9 +108,26 @@ board boards get BRD
 board lists list
 board lists list BRD
 board column list --json
+board list create --title Review
+board list update Review --title QA
+board list reorder --lists "Backlog,Planning,To Do,Doing,Done"
+board list setup --preset planning
 ```
 
 List names are accepted by card create and move commands, so most workflows do not need raw `lst_...` ids.
+
+## Labels And Epics
+
+```bash
+board label list
+board label create --text Bug --color red
+board label update Bug --text Defect --color orange
+
+board epic list
+board epic create --name Alpha --color blue --status active
+board epic update Alpha --status paused
+board epic archive Alpha --force
+```
 
 ## Cards
 
@@ -119,6 +139,8 @@ board card list --list "Doing"
 board card list BRD --label Bug --json
 board card get BRD-29
 board card view BRD-29
+board card activity BRD-29
+board card comments BRD-29
 ```
 
 Create a card:
@@ -133,7 +155,7 @@ board card create \
 Update a card:
 
 ```bash
-board cards update BRD-29 \
+board card update BRD-29 \
   --title "Ship CLI docs" \
   --description "Updated from the terminal" \
   --due-at 2026-05-01
@@ -150,6 +172,18 @@ Comment on a card:
 
 ```bash
 board card comment BRD-29 --message "Done via CLI"
+```
+
+Other lifecycle commands:
+
+```bash
+board card reorder --list Doing --cards BRD-29,BRD-30
+board card link BRD-29 --target BRD-30 --relation relates_to
+board card templates
+board card template-create --name Bug --title "Fix bug"
+board card from-template --template Bug --list "To Do"
+board card archive BRD-29 --force
+board card delete BRD-29 --force
 ```
 
 Descriptions and comments accept literal `\n` and send them as real newlines:
