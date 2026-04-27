@@ -4,8 +4,10 @@ export {
 	clearStoredToken,
 	getConfigDir,
 	getConfigPath,
+	getStoredDefaultBoard,
 	loadAuthState,
 	setStoredBaseUrl,
+	setStoredDefaultBoard,
 	setStoredToken,
 } from "./config.js";
 export { loginWithBrowser } from "./login.js";

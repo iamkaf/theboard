@@ -7,6 +7,7 @@ import type { AuthState } from "./types.js";
 type ConfigFile = {
 	baseUrl?: string;
 	token?: string;
+	defaultBoard?: string;
 };
 
 export function getConfigDir() {
@@ -47,6 +48,7 @@ export async function loadAuthState(overrides: AuthState = {}): Promise<AuthStat
 			fileConfig.baseUrl ??
 			"https://board.kaf.sh/api",
 		token: overrides.token ?? process.env.BOARD_TOKEN ?? fileConfig.token,
+		defaultBoard: overrides.defaultBoard ?? process.env.BOARD_DEFAULT_BOARD ?? fileConfig.defaultBoard,
 	};
 }
 
@@ -76,6 +78,19 @@ export async function setStoredBaseUrl(baseUrl: string) {
 	await writeConfigFile({
 		...current,
 		baseUrl,
+	});
+}
+
+export async function getStoredDefaultBoard() {
+	const current = await readConfigFile();
+	return current.defaultBoard;
+}
+
+export async function setStoredDefaultBoard(board: string) {
+	const current = await readConfigFile();
+	await writeConfigFile({
+		...current,
+		defaultBoard: board,
 	});
 }
 

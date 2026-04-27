@@ -9,6 +9,7 @@ export type JsonValue =
 export type AuthState = {
 	token?: string | undefined;
 	baseUrl?: string | undefined;
+	defaultBoard?: string | undefined;
 };
 
 export type AuthenticatedUser = {
@@ -98,6 +99,10 @@ export type CardRecord = {
 	assigneeUserId: string | null;
 	epicId: string | null;
 	dueAt: number | null;
+};
+
+export type CardWithList = CardRecord & {
+	listTitle?: string | null | undefined;
 };
 
 export type EpicRecord = {

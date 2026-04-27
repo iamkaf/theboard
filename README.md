@@ -47,33 +47,45 @@ This opens `board.kaf.sh` in your browser, asks you to approve CLI access, and s
 | `board auth status` | Check current authentication status |
 | `board auth set-token <token>` | Manually configure a Personal Access Token (PAT) |
 | `board auth set-base-url <url>` | Point the CLI at a different API base URL |
+| `board board use <board>` | Store a default board for commands that omit `<board>` |
 | `board info` | View API information |
 
 The CLI stores local config in `~/.config/board/config.json`. You can override these using environment variables:
 
 - `BOARD_TOKEN`
 - `BOARD_BASE_URL`
+- `BOARD_DEFAULT_BOARD`
 
 ### Boards
 
 | Command | Description |
 |---------|-------------|
 | `board boards list` | List available boards (use `--json` for scripting) |
-| `board boards get <board>` | Get details for a specific board by slug or internal id |
+| `board boards get <board>` | Get details for a specific board by slug, code, or internal id |
+| `board board use <board>` | Set the default board |
+
+### Lists
+
+| Command | Description |
+|---------|-------------|
+| `board lists list [<board>]` | List workflow lists and card counts |
 
 ### Cards
 
-`<board>` accepts either a board slug or an internal board id. Use the slug by default.
+`<board>` accepts a board slug, board code, internal board id, or the configured default board. Use `--board <board>` or `-b <board>` as a global option when you want the board argument out of the positional flow.
 
 Cards can be targeted by internal ID (`crd_...`) or public code (`BRD-29`).
 
 | Command | Description |
 |---------|-------------|
-| `board cards get <board> <card-id>` | View card details |
-| `board cards create <board> --list <list-id> --title <text> [options]` | Create a new card |
+| `board card list [<board>] [--list <name-or-id>]` | List cards, optionally filtered by list |
+| `board card get [<board>] <card-id>` | View card details |
+| `board card create [<board>] --list <name-or-id> --title <text> [options]` | Create a new card |
 | `board cards update <board> <card-id> [options]` | Update an existing card |
-| `board cards move <board> <card-id> --list <list-id> --index <num>` | Move a card to a different list |
-| `board cards comment <board> <card-id> --message <text>` | Add a comment to a card |
+| `board card move [<board>] <card-id> --list <name-or-id> [--index <num>]` | Move a card to a different list; omitted index appends |
+| `board card comment [<board>] <card-id> --message <text>` | Add a comment to a card |
+
+The older plural `cards` commands still work for compatibility.
 
 **Card Options:**
 

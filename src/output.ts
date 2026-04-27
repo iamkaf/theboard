@@ -1,4 +1,12 @@
-import type { BoardDetail, BoardSummary, CardActivityRecord, CardRecord, JsonValue } from "./types.js";
+import type {
+	BoardDetail,
+	BoardSummary,
+	CardActivityRecord,
+	CardRecord,
+	CardWithList,
+	JsonValue,
+	ListRecord,
+} from "./types.js";
 
 export type OutputMode = "text" | "json";
 
@@ -30,6 +38,35 @@ export function renderBoards(boards: BoardSummary[]) {
 			(board) =>
 				`${board.code.padEnd(6)} ${board.name} (${board.visibility}, ${board.role ?? "guest"})\n  id: ${board.id}\n  slug: ${board.slug}`,
 		)
+		.join("\n");
+}
+
+export function renderLists(lists: ListRecord[], cards: CardRecord[] = []) {
+	if (lists.length === 0) {
+		return "No lists found.";
+	}
+
+	return lists
+		.map((list) => {
+			const count = cards.filter((card) => card.listId === list.id).length;
+			return `${list.title.padEnd(18)} ${String(count).padStart(3)} cards  ${list.id}`;
+		})
+		.join("\n");
+}
+
+export function renderCardList(cards: CardWithList[]) {
+	if (cards.length === 0) {
+		return "No cards found.";
+	}
+
+	return cards
+		.map((card) => {
+			const labels = card.labels.length
+				? ` [${card.labels.map((label) => label.text || label.id).join(", ")}]`
+				: "";
+			const list = card.listTitle ? ` (${card.listTitle})` : "";
+			return `${card.identifier.padEnd(8)} ${card.title}${list}${labels}`;
+		})
 		.join("\n");
 }
 
@@ -66,6 +103,10 @@ export function renderCard(card: CardRecord) {
 
 	if (card.labels.length > 0) {
 		lines.push(`labels: ${card.labels.map((label) => label.text || label.id).join(", ")}`);
+	}
+
+	if (card.assigneeUserId !== null) {
+		lines.push(`assignee: ${card.assigneeUserId}`);
 	}
 
 	if (card.dueAt !== null) {
