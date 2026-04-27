@@ -11,92 +11,154 @@
 <h1 align="center">board</h1>
 
 <p align="center">
-  <strong>A zero-dependency CLI for interacting with <a href="https://board.kaf.sh">The Board</a> from your terminal.</strong>
+  <strong>A zero-dependency CLI for <a href="https://board.kaf.sh">The Board</a>.</strong>
 </p>
 
 ---
 
-board provides browser-based login and manages card and board flows for [The Board](https://board.kaf.sh) directly from the command line without heavy third-party dependencies.
+`board` is the terminal client for The Board. It is built for fast board and card work: browser login, a default board, human-friendly list names, card codes, and JSON output for scripts.
 
-## Quick Start
-
-### Install
+## Install
 
 ```bash
 npm install -g @iamkaf/board
 ```
 
-*(You can also use `npx @iamkaf/board` to run without installing globally.)*
+You can also run it without installing:
 
-### Authenticate
+```bash
+npx @iamkaf/board --help
+```
+
+## Authenticate
 
 ```bash
 board login
 ```
 
-This opens `board.kaf.sh` in your browser, asks you to approve CLI access, and securely stores the token locally.
+The login flow opens `board.kaf.sh` in your browser, asks you to approve CLI access, and stores a local token in `~/.config/board/config.json`.
 
-## Usage
+Useful auth and config commands:
 
-### Authentication & Config
+```bash
+board auth status
+board logout
+board auth set-token brd_pat_...
+board auth set-base-url https://board.kaf.sh/api
+```
 
-| Command | Description |
-|---------|-------------|
-| `board login` | Authenticate via browser |
-| `board logout` | Remove the local CLI token |
-| `board auth status` | Check current authentication status |
-| `board auth set-token <token>` | Manually configure a Personal Access Token (PAT) |
-| `board auth set-base-url <url>` | Point the CLI at a different API base URL |
-| `board board use <board>` | Store a default board for commands that omit `<board>` |
-| `board info` | View API information |
+Environment overrides:
 
-The CLI stores local config in `~/.config/board/config.json`. You can override these using environment variables:
+```bash
+export BOARD_TOKEN="brd_pat_..."
+export BOARD_BASE_URL="https://board.kaf.sh/api"
+export BOARD_DEFAULT_BOARD="BRD"
+```
 
-- `BOARD_TOKEN`
-- `BOARD_BASE_URL`
-- `BOARD_DEFAULT_BOARD`
+## Global Options
 
-### Boards
+Global options may appear before or after the command:
 
-| Command | Description |
-|---------|-------------|
-| `board boards list` | List available boards (use `--json` for scripting) |
-| `board boards get <board>` | Get details for a specific board by slug, code, or internal id |
-| `board board use <board>` | Set the default board |
+```bash
+board --json boards list
+board boards list --json
+board -b BRD card list --list "To Do"
+```
 
-### Lists
+Supported globals:
 
-| Command | Description |
-|---------|-------------|
-| `board lists list [<board>]` | List workflow lists and card counts |
+| Option | Description |
+| --- | --- |
+| `--json` | Print machine-readable JSON |
+| `--format json` | Equivalent to `--json` |
+| `--board`, `-b` | Use a board without passing it positionally |
+| `--token` | Use a token for one command |
+| `--base-url` | Use a different API base URL for one command |
 
-### Cards
+## Boards
 
-`<board>` accepts a board slug, board code, internal board id, or the configured default board. Use `--board <board>` or `-b <board>` as a global option when you want the board argument out of the positional flow.
+`<board>` can be a board code like `BRD`, a slug like `board-823e53`, or an internal `brd_...` id.
 
-Cards can be targeted by internal ID (`crd_...`) or public code (`BRD-29`).
+```bash
+board boards list
+board board get BRD
+board board use BRD
+```
 
-| Command | Description |
-|---------|-------------|
-| `board card list [<board>] [--list <name-or-id>]` | List cards, optionally filtered by list |
-| `board card get [<board>] <card-id>` | View card details |
-| `board card create [<board>] --list <name-or-id> --title <text> [options]` | Create a new card |
-| `board cards update <board> <card-id> [options]` | Update an existing card |
-| `board card move [<board>] <card-id> --list <name-or-id> [--index <num>]` | Move a card to a different list; omitted index appends |
-| `board card comment [<board>] <card-id> --message <text>` | Add a comment to a card |
+`board board use <board>` stores a default board so card commands can omit the board argument:
 
-The older plural `cards` commands still work for compatibility.
+```bash
+board board use BRD
+board card list --list "To Do"
+board card get BRD-88
+```
 
-**Card Options:**
+The plural `boards` command remains available for compatibility:
 
-| Option | Actions | Description |
-|--------|---------|-------------|
-| Title | `--title <text>` | Set the card title |
-| Description | `--description <text>` | Set the card description |
-| Label | `--label <id>`, `--clear-labels` | Modify or clear labels |
-| Assignee | `--assignee <id>`, `--clear-assignee` | Modify or clear assignee |
-| Epic | `--epic <id>`, `--clear-epic` | Modify or clear epic |
-| Due Date | `--due-at <iso-or-ms>`, `--clear-due-at` | Modify or clear due date |
+```bash
+board boards get BRD
+```
+
+## Lists
+
+```bash
+board lists list
+board lists list BRD
+board column list --json
+```
+
+List names are accepted by card create and move commands, so most workflows do not need raw `lst_...` ids.
+
+## Cards
+
+Cards can be targeted by public code, such as `BRD-29`, or by internal `crd_...` id.
+
+```bash
+board card list
+board card list --list "Doing"
+board card list BRD --label Bug --json
+board card get BRD-29
+board card view BRD-29
+```
+
+Create a card:
+
+```bash
+board card create \
+  --list "To Do" \
+  --title "Ship CLI docs" \
+  --description "Created from the terminal"
+```
+
+Update a card:
+
+```bash
+board cards update BRD-29 \
+  --title "Ship CLI docs" \
+  --description "Updated from the terminal" \
+  --due-at 2026-05-01
+```
+
+Move a card. If `--index` is omitted, the card is appended to the target list.
+
+```bash
+board card move BRD-29 --to Doing
+board card move BRD-29 --list Done --index 0
+```
+
+Comment on a card:
+
+```bash
+board card comment BRD-29 --message "Done via CLI"
+```
+
+Descriptions and comments accept literal `\n` and send them as real newlines:
+
+```bash
+board card comment BRD-29 --message "First line\nSecond line"
+```
+
+The older plural `cards` commands still work for compatibility, but new docs and scripts should prefer `board card ...`.
 
 ## Development
 
