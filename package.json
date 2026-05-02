@@ -1,6 +1,6 @@
 {
   "name": "@iamkaf/board",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "CLI for interacting with The Board API",
   "type": "module",
   "bin": {
